@@ -1,10 +1,15 @@
 import './style.css'
 import { memoApi } from './api/memoClient'
 import { renderBrowseList, renderSearchResultList } from './ui/memoListView'
+import { collectTags, renderTagFilter } from './ui/tagFilterView'
 
 const searchInput = document.querySelector<HTMLInputElement>('#search-input')!
 const resultSummary = document.querySelector<HTMLParagraphElement>('#result-summary')!
 const memoListElement = document.querySelector<HTMLUListElement>('#memo-list')!
+const tagFilterElement = document.querySelector<HTMLDivElement>('#tag-filter')!
+const toastElement = document.querySelector<HTMLDivElement>('#toast')!
+
+let selectedTag: string | null = null
 
 const toggleFormButton = document.querySelector<HTMLButtonElement>('#toggle-form-button')!
 const cancelFormButton = document.querySelector<HTMLButtonElement>('#cancel-form-button')!
@@ -82,19 +87,49 @@ function parseTags(rawTags: string): string[] {
     .filter((tag) => tag.length > 0)
 }
 
+let toastTimer: number | undefined
+
+function showToast(message: string): void {
+  toastElement.textContent = message
+  toastElement.classList.add('is-visible')
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => {
+    toastElement.classList.remove('is-visible')
+  }, 2000)
+}
+
+function filterByTag<T>(items: T[], getTags: (item: T) => string[]): T[] {
+  if (!selectedTag) return items
+  return items.filter((item) => getTags(item).includes(selectedTag!))
+}
+
 function renderResults(): void {
+  const allMemos = memoApi.list()
+  tagFilterElement.innerHTML = renderTagFilter(collectTags(allMemos), selectedTag)
+
   const query = searchInput.value.trim()
 
   if (query.length === 0) {
-    const memos = memoApi.list()
+    const memos = filterByTag(allMemos, (memo) => memo.tags)
     resultSummary.textContent = `${memos.length}件のメモ`
     memoListElement.innerHTML = renderBrowseList(memos)
     return
   }
 
-  const results = memoApi.search(query)
+  const results = filterByTag(memoApi.search(query), (result) => result.memo.tags)
   resultSummary.textContent = `「${query}」の検索結果: ${results.length}件`
   memoListElement.innerHTML = renderSearchResultList(results, query)
+}
+
+function handleTagFilterClick(event: MouseEvent): void {
+  const target = event.target
+  if (!(target instanceof HTMLElement)) return
+
+  const chip = target.closest<HTMLButtonElement>('.tag-filter-chip')
+  if (!chip?.dataset.tag) return
+
+  selectedTag = selectedTag === chip.dataset.tag ? null : chip.dataset.tag
+  renderResults()
 }
 
 function showForm(): void {
@@ -121,6 +156,7 @@ function handleFormSubmit(event: SubmitEvent): void {
   hideForm()
   searchInput.value = ''
   renderResults()
+  showToast('メモを保存しました')
 }
 
 function handleMemoListClick(event: MouseEvent): void {
@@ -132,6 +168,25 @@ function handleMemoListClick(event: MouseEvent): void {
 
   memoApi.remove(deleteButton.dataset.memoId)
   renderResults()
+  showToast('メモを削除しました')
+}
+
+function isTextInputFocused(): boolean {
+  const active = document.activeElement
+  return active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement
+}
+
+function handleGlobalKeydown(event: KeyboardEvent): void {
+  if (event.key === '/' && !isTextInputFocused()) {
+    event.preventDefault()
+    searchInput.focus()
+    return
+  }
+
+  if (event.key === 'Escape' && document.activeElement === searchInput && searchInput.value !== '') {
+    searchInput.value = ''
+    renderResults()
+  }
 }
 
 searchInput.addEventListener('input', renderResults)
@@ -139,8 +194,11 @@ toggleFormButton.addEventListener('click', showForm)
 cancelFormButton.addEventListener('click', hideForm)
 memoForm.addEventListener('submit', handleFormSubmit)
 memoListElement.addEventListener('click', handleMemoListClick)
+tagFilterElement.addEventListener('click', handleTagFilterClick)
 themeToggleButton.addEventListener('click', toggleTheme)
+document.addEventListener('keydown', handleGlobalKeydown)
 
 applyTheme(getStoredTheme())
 renderResults()
 playTaglineTypewriter()
+searchInput.focus({ preventScroll: true })

@@ -23,6 +23,15 @@
         <h1 class="tagline" id="tagline" aria-label="散らばった技術メモを、自作の検索エンジンで見つける">
           <span class="tagline-text"></span><span class="caret" aria-hidden="true"></span>
         </h1>
+        <p class="intro-text">
+          技術記事の要点やコードスニペットをメモしても、後から探せなければ意味がない。
+          検索ライブラリに頼らず転置インデックスを自作して、この問題に取り組んだ動くポートフォリオ作品です。
+        </p>
+        <p class="meta-line">
+          <a href="https://github.com/yukisatodev/grepnote" target="_blank" rel="noopener noreferrer"
+            >GitHubで設計判断の過程を見る →</a
+          >
+        </p>
       </header>
 
       <section class="search-section">
@@ -38,6 +47,7 @@
           />
           <span class="command-part">" ./notes/*.md</span>
         </div>
+        <div id="tag-filter" class="tag-filter" role="group" aria-label="タグで絞り込む"></div>
       </section>
 
       <section class="result-section">
@@ -69,6 +79,7 @@
         </form>
       </section>
     </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
