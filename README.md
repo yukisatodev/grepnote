@@ -6,7 +6,7 @@
 既存の検索ライブラリに頼らず、転置インデックス・日英混在トークナイズ・TF-IDFスコアリングを
 自分で実装することで、「検索とは何をしているのか」を理解し、その過程の意思決定を公開したポートフォリオ作品。
 
-**Demo**: (デプロイ後にURLを追記)
+**Demo**: https://yukisatodev.github.io/grepnote/
 
 ![検索前の一覧画面](./docs/screenshots/screenshot-list.png)
 
