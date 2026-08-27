@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>grepnote - 散らばった技術メモを、自作の検索エンジンで見つける</title>
+    <meta name="description" content="転置インデックスを自作した、エンジニア向け技術メモ検索ツール。設計判断の過程を公開したポートフォリオ作品です。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <p class="prompt-line"><span class="prompt-sigil">$</span> grepnote</p>
+        <h1 class="tagline" id="tagline" aria-label="散らばった技術メモを、自作の検索エンジンで見つける">
+          <span class="tagline-text"></span><span class="caret" aria-hidden="true"></span>
+        </h1>
+      </header>
+
+      <section class="search-section">
+        <div class="command-line">
+          <span class="command-part">grep -i "</span>
+          <input
+            id="search-input"
+            type="search"
+            class="search-input"
+            placeholder="rebase"
+            autocomplete="off"
+            aria-label="キーワードで検索"
+          />
+          <span class="command-part">" ./notes/*.md</span>
+        </div>
+      </section>
+
+      <section class="result-section">
+        <p id="result-summary" class="result-summary"></p>
+        <ul id="memo-list" class="memo-list"></ul>
+      </section>
+
+      <section class="add-memo-section">
+        <button id="toggle-form-button" type="button" class="toggle-form-button">
+          <span class="prompt-sigil">$</span> grepnote add
+        </button>
+        <form id="memo-form" class="memo-form" hidden>
+          <label class="form-field">
+            <span class="form-label">title</span>
+            <input id="memo-title-input" type="text" placeholder="TypeScriptのジェネリクスで型を使い回す" required />
+          </label>
+          <label class="form-field">
+            <span class="form-label">body</span>
+            <textarea id="memo-body-input" placeholder="本文" rows="4" required></textarea>
+          </label>
+          <label class="form-field">
+            <span class="form-label">tags</span>
+            <input id="memo-tags-input" type="text" placeholder="git, ci" />
+          </label>
+          <div class="memo-form-actions">
+            <button type="submit">保存</button>
+            <button id="cancel-form-button" type="button">キャンセル</button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

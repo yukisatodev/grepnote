@@ -1,0 +1,373 @@
+:root {
+  color-scheme: dark light;
+  --bg: #0d0f0c;
+  --surface: #15170f;
+  --surface-2: #1b1e15;
+  --border: #2a2d20;
+  --text: #d9d6c4;
+  --text-muted: #8d8a76;
+  --accent-green: #7fb069;
+  --accent-green-bg: rgba(127, 176, 105, 0.12);
+  --accent-amber: #d68c45;
+  --mark-bg: #d68c45;
+  --mark-text: #14150f;
+  --danger: #c1666b;
+
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+  --sans: 'IBM Plex Sans JP', system-ui, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f6f4ec;
+    --surface: #ffffff;
+    --surface-2: #efece0;
+    --border: #d9d5c2;
+    --text: #232017;
+    --text-muted: #6b6754;
+    --accent-green: #3f7a4e;
+    --accent-green-bg: rgba(63, 122, 78, 0.1);
+    --accent-amber: #a85f22;
+    --mark-bg: #f3d18a;
+    --mark-text: #232017;
+    --danger: #a13f3f;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-green);
+  outline-offset: 2px;
+}
+
+#app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+/* --- header --- */
+
+.app-header {
+  margin-bottom: 2rem;
+}
+
+.prompt-line {
+  font-family: var(--mono);
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.prompt-sigil {
+  color: var(--accent-green);
+}
+
+.tagline {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text);
+  min-height: 1.5em;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  vertical-align: -0.15em;
+  background: var(--accent-green);
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}
+
+/* --- search --- */
+
+.search-section {
+  margin-bottom: 1.5rem;
+}
+
+.command-line {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.command-line:focus-within {
+  border-color: var(--accent-green);
+}
+
+.command-part {
+  color: var(--text-muted);
+  white-space: pre;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  color: var(--accent-green);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.search-input:focus-visible {
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+/* --- results --- */
+
+.result-summary {
+  font-family: var(--mono);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin: 0 0 0.75rem;
+}
+
+.memo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.memo-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent-green);
+  border-radius: 4px;
+  padding: 1rem 1.1rem;
+  animation: fade-in 0.2s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memo-item {
+    animation: none;
+  }
+}
+
+.memo-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.memo-title {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.memo-score {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent-amber);
+  white-space: nowrap;
+}
+
+.memo-body {
+  color: var(--text-muted);
+  margin: 0.5rem 0 0.85rem;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.memo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent-green);
+  background: var(--accent-green-bg);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+mark {
+  background: var(--mark-bg);
+  color: var(--mark-text);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.memo-empty {
+  list-style: none;
+  color: var(--text-muted);
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.delete-memo-button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.delete-memo-button:hover {
+  color: var(--danger);
+}
+
+/* --- add memo --- */
+
+.add-memo-section {
+  margin-top: 2rem;
+}
+
+.toggle-form-button {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.toggle-form-button:hover {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.memo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.form-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent-amber);
+}
+
+.memo-form input,
+.memo-form textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.memo-form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.memo-form-actions button {
+  padding: 0.55rem 1.1rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: var(--mono);
+}
+
+.memo-form-actions button[type='submit'] {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: #0d0f0c;
+  font-weight: 600;
+}
+
+#cancel-form-button {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .command-line {
+    flex-wrap: wrap;
+  }
+}
