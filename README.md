@@ -8,6 +8,16 @@
 
 **Demo**: (デプロイ後にURLを追記)
 
+![検索前の一覧画面](./docs/screenshots/screenshot-list.png)
+
+`grep -i "rebase" ./notes/*.md` のように、検索ボックス自体をコマンドラインに見立てている。
+
+![「rebase」で検索した結果画面](./docs/screenshots/screenshot-search.png)
+
+検索結果には一致箇所のハイライトとスコアを表示する。なお2件目の`SQLでインデックスを張る基準`が
+ヒットしているのは意図した挙動で、bi-gram検索の限界について[04-tradeoffs.md](./docs/04-tradeoffs.md)
+に詳しく書いている。
+
 ## このリポジトリの読み方
 
 このプロジェクトは「動くもの」であると同時に「なぜそう作ったかの記録」でもある。

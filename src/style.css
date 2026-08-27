@@ -17,8 +17,9 @@
   --sans: 'IBM Plex Sans JP', system-ui, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 
+/* OSの設定がlightで、かつユーザーが明示的にdarkを選んでいない場合 */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme='dark']) {
     --bg: #f6f4ec;
     --surface: #ffffff;
     --surface-2: #efece0;
@@ -32,6 +33,22 @@
     --mark-text: #232017;
     --danger: #a13f3f;
   }
+}
+
+/* テーマ切り替えボタンでユーザーが明示的にlightを選んだ場合(OS設定を上書きする) */
+:root[data-theme='light'] {
+  --bg: #f6f4ec;
+  --surface: #ffffff;
+  --surface-2: #efece0;
+  --border: #d9d5c2;
+  --text: #232017;
+  --text-muted: #6b6754;
+  --accent-green: #3f7a4e;
+  --accent-green-bg: rgba(63, 122, 78, 0.1);
+  --accent-amber: #a85f22;
+  --mark-bg: #f3d18a;
+  --mark-text: #232017;
+  --danger: #a13f3f;
 }
 
 * {
@@ -65,14 +82,37 @@ textarea:focus-visible {
   margin-bottom: 2rem;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .prompt-line {
   font-family: var(--mono);
   color: var(--text-muted);
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.9rem;
 }
 
 .prompt-sigil {
+  color: var(--accent-green);
+}
+
+.theme-toggle-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+
+.theme-toggle-button:hover {
+  border-color: var(--accent-green);
   color: var(--accent-green);
 }
 

@@ -13,6 +13,49 @@ const titleInput = document.querySelector<HTMLInputElement>('#memo-title-input')
 const bodyInput = document.querySelector<HTMLTextAreaElement>('#memo-body-input')!
 const tagsInput = document.querySelector<HTMLInputElement>('#memo-tags-input')!
 
+const themeToggleButton = document.querySelector<HTMLButtonElement>('#theme-toggle-button')!
+const THEME_STORAGE_KEY = 'grepnote:theme'
+
+type Theme = 'light' | 'dark'
+
+function isTheme(value: string | null): value is Theme {
+  return value === 'light' || value === 'dark'
+}
+
+function getStoredTheme(): Theme | null {
+  const stored = localStorage.getItem(THEME_STORAGE_KEY)
+  return isTheme(stored) ? stored : null
+}
+
+function getSystemTheme(): Theme {
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+}
+
+function getEffectiveTheme(): Theme {
+  return getStoredTheme() ?? getSystemTheme()
+}
+
+function updateThemeToggleLabel(): void {
+  const nextTheme: Theme = getEffectiveTheme() === 'dark' ? 'light' : 'dark'
+  themeToggleButton.textContent = `[${nextTheme}]`
+  themeToggleButton.setAttribute('aria-label', `${nextTheme === 'light' ? 'ライト' : 'ダーク'}モードに切り替える`)
+}
+
+function applyTheme(theme: Theme | null): void {
+  if (theme) {
+    document.documentElement.setAttribute('data-theme', theme)
+  } else {
+    document.documentElement.removeAttribute('data-theme')
+  }
+  updateThemeToggleLabel()
+}
+
+function toggleTheme(): void {
+  const nextTheme: Theme = getEffectiveTheme() === 'dark' ? 'light' : 'dark'
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme)
+  applyTheme(nextTheme)
+}
+
 const taglineText = document.querySelector<HTMLSpanElement>('.tagline-text')!
 const TAGLINE = '散らばった技術メモを、自作の検索エンジンで見つける'
 const TYPE_INTERVAL_MS = 35
@@ -96,6 +139,8 @@ toggleFormButton.addEventListener('click', showForm)
 cancelFormButton.addEventListener('click', hideForm)
 memoForm.addEventListener('submit', handleFormSubmit)
 memoListElement.addEventListener('click', handleMemoListClick)
+themeToggleButton.addEventListener('click', toggleTheme)
 
+applyTheme(getStoredTheme())
 renderResults()
 playTaglineTypewriter()
